@@ -1,0 +1,15 @@
+{
+  "name": "invoke-pwsh",
+  "version": "1.0.0",
+  "description": "Invoke PWSH-based GitHub Action.",
+  "main": "invoke-pwsh.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EBekker",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/exec": "^1.0.4"
+  }
+}

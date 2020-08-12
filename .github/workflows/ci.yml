@@ -1,0 +1,142 @@
+
+name: CI
+
+on:
+  push:
+  release:
+    types: published
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    #runs-on: ubuntu-16.04
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v1
+      
+      - name: pester tests
+        uses: zyborg/pester-tests-report@v1.2.0
+        with:
+          include_paths: ./tests/GitHubActions_tests.ps1
+          exclude_tags: SkipCI
+          report_name: action_base_tests
+          report_title: Action Base Tests
+          gist_name: pwsh-github-action-base_tests.md
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gist_token: ${{ secrets.GIST_TOKEN }}
+          gist_badge_label: Tests %ExecutedAt%
+
+      # - name: pester tests manually
+      #   shell: pwsh
+      #   run: |
+      #     $neededModules = @(
+      #       'Pester'
+      #       'GitHubActions'
+      #     )
+      #     $neededModules | % {
+      #       if (-not (Get-Module -ListAvailable $_)) {
+      #         Install-Module $_ -Force
+      #       }
+      #     }
+      #     ./tests/GitHubActions_tests.ps1
+
+      # - name: bundle distributable components
+      #   shell: pwsh
+      #   run: |
+      #     Compress-Archive -DestinationPath ./dist.zip -Path @(
+      #       'js',  'lib'
+      #       'SAMPLE-*', 'LICENSE', 'README.md'
+      #     )
+
+      - name: assemble distributable components
+        shell: pwsh
+        run: |
+          mkdir ./dist
+          Copy-Item ./_init     ./dist/ -Recurse
+          Copy-Item ./SAMPLE-*  ./dist/
+          Copy-Item ./LICENSE   ./dist/
+          Copy-Item ./README.md ./dist/
+
+      - name: upload distributable artifact
+        #if: startsWith(github.ref, 'refs/tags/v=')
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v1
+        with:
+          name: dist
+          path: ./dist
+
+
+  ## For testing out tests on Windows
+  build-on-win:
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v1
+      
+      - name: pester tests
+        uses: zyborg/pester-tests-report@v1.2.0
+        with:
+          include_paths: ./tests/GitHubActions_tests.ps1
+          exclude_tags: SkipCI
+          report_name: action_base_tests-on-win
+          report_title: Action Base Tests (On Windows)
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+    
+  
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'release'
+    steps:
+
+      - name: download distributable artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: dist
+      
+      - name: bundle distributable components
+        shell: pwsh
+        run: |
+          cd dist
+          Compress-Archive -DestinationPath ../pwsh-github-action-base-dist.zip -Path ./*
+
+      - name: attach asset to release
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tagName = $env:GITHUB_REF -replace 'refs/tags/',''
+          $githubHeaders = @{ Authorization = "token $($env:GITHUB_TOKEN)" }
+          $githubRepo = $env:GITHUB_REPOSITORY
+          $listRelsUrl = "https://api.github.com/repos/$($githubRepo)/releases"
+          $listRelsResp = Invoke-WebRequest -Headers $githubHeaders $listRelsUrl
+          
+          $listRels = $listRelsResp.Content | ConvertFrom-Json
+          if (-not ($listRels.Count)) {
+            throw "list releases response did not resolve to any releases"
+          }
+          else {
+            Write-Output "Found [$($listRels.Count)] release(s)."
+          }
+
+          $thisRel = $listRels | Where-Object { $_.tag_name -eq $tagName }
+          if (-not $thisRel) {
+            throw "could not find release for tag [$tagName]"
+          }
+          else {
+            Write-Output "Found release [$($thisRel.tag_name)][$($thisRel.url)]"
+          }
+
+          $uploadUrl = $thisRel.upload_url.Replace(
+            '{?name,label}','?name=pwsh-github-action-base-dist.zip')
+          $uploadHeaders = @{
+            "Authorization" = "token $($env:GITHUB_TOKEN)"
+            "Content-Type" = "application/zip"
+          }
+          Write-Output "Adding asset to [$uploadUrl]"
+          $uploadResp = Invoke-WebRequest -Headers $uploadHeaders $uploadUrl `
+            -InFile pwsh-github-action-base-dist.zip

@@ -1,0 +1,40 @@
+
+## This is a SAMPLE metadata file for a GitHub Action.  For more info:
+##    https://help.github.com/en/articles/metadata-syntax-for-github-actions
+
+name: action-name
+author: your-name
+description: What does the action do.
+
+## Here you describe your *formal* inputs -- those that are
+## documented and can be displayed by the marketplace.
+## You also use these to identify the *required* inputs.
+inputs:
+
+  firstInput:
+    description: what is this input for?
+    required: false
+
+  secondInput:
+    description: what is this input for?
+    required: false
+    default: input default value
+
+## Here you describe your *formal* outputs.
+outputs:
+
+  first_output:
+    description: what does this output provide?
+
+  second_output:
+    description: what does this output provide?
+
+branding:
+  color: purple
+  icon: terminal
+
+## Even though the Action logic may be implemented
+## in PWSH, we still need a NodeJS entry point
+runs:
+  using: node12
+  main: _init/index.js
