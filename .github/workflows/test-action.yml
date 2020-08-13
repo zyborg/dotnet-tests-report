@@ -33,7 +33,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: use this action, test solution dir
-        id: testAction3
+        id: testAction2
         uses: ./
         with:
           project_path: tests
