@@ -1,0 +1,55 @@
+
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_check_run:
+        required: false
+      gist_name:
+        required: false
+  #push:
+  #release:
+  #  types: published
+
+jobs:
+
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v1
+      
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.x'
+
+      - name: use this action, default args
+        id: testAction0
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: use this action, nunit project path
+        id: testAction0
+        uses: ./
+        with:
+          project_path: tests/nunit-csharp-samples/syntax
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  ## For testing out tests on Windows
+  run-tests-on-win:
+    if: ${{ false }}
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v1
+      
+      - name: use this action
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
