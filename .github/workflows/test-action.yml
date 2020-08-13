@@ -26,14 +26,21 @@ jobs:
         with:
           dotnet-version: '5.0.100-preview.7.20366.6'
 
-      - name: use this action, default args
+      - name: use this action, default args (missing solution/project paths)
         id: testAction1
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: use this action, nunit project path
-        id: testAction2
+      - name: use this action, test solution dir
+        id: testAction3
+        uses: ./
+        with:
+          project_path: tests
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: use this action, nunit project dir
+        id: testAction3
         uses: ./
         with:
           project_path: tests/nunit-csharp-samples/syntax
