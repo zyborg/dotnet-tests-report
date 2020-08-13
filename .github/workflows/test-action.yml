@@ -35,17 +35,35 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: use this action, test solution dir
+        if: ${{ !cancelled() }}
         id: testAction2
         uses: ./
         with:
           project_path: tests
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: use this action, nunit project dir
-        id: testAction3
+      - name: use this action, xunit project dir
+        if: ${{ !cancelled() }}  
+        id: testAction3a
+        uses: ./
+        with:
+          project_path: tests/samples.xunit/AssertExamples
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: use this action, xunit project dir
+        if: ${{ !cancelled() }}  
+        id: testAction3b
         uses: ./
         with:
           project_path: tests/nunit-csharp-samples/syntax
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: use this action, mstest project dir
+        if: ${{ !cancelled() }}  
+        id: testAction3c
+        uses: ./
+        with:
+          project_path: tests/rafaelfgx_DotNetTests/MSTest
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   ## For testing out tests on Windows
