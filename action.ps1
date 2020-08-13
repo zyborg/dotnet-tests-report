@@ -241,13 +241,13 @@ else {
     Write-ActionInfo "Compiling Test Result object"
     $testResultXml = Select-Xml -Path $test_results_path -XPath /
     $testResult = [psobject]::new()
-    $x.Node.TestRun.Attributes | % { $testResult |
+    $testResultXml.Node.TestRun.Attributes | % { $testResult |
         Add-Member -MemberType NoteProperty -Name "TestRun_$($_.Name)" -Value $_.Value }
-    $x.Node.TestRun.Times.Attributes | % { $testResult |
+    $testResultXml.Node.TestRun.Times.Attributes | % { $testResult |
         Add-Member -MemberType NoteProperty -Name "Times_$($_.Name)" -Value $_.Value }
-    $x.Node.TestRun.ResultSummary.Attributes | % { $testResult |
+    $testResultXml.Node.TestRun.ResultSummary.Attributes | % { $testResult |
         Add-Member -MemberType NoteProperty -Name "ResultSummary_$($_.Name)" -Value $_.Value }
-    $x.Node.TestRun.ResultSummary.Counters.Attributes | % { $testResult |
+    $testResultXml.Node.TestRun.ResultSummary.Counters.Attributes | % { $testResult |
         Add-Member -MemberType NoteProperty -Name "Counters_$($_.Name)" -Value $_.Value }
     Write-ActionInfo "$($testResult|Out-Default)"
 }
