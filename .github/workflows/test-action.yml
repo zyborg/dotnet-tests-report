@@ -1,5 +1,5 @@
 
-name: CI
+name: test-action
 
 on:
   workflow_dispatch:
@@ -27,13 +27,13 @@ jobs:
           dotnet-version: '5.x'
 
       - name: use this action, default args
-        id: testAction0
+        id: testAction1
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: use this action, nunit project path
-        id: testAction0
+        id: testAction2
         uses: ./
         with:
           project_path: tests/nunit-csharp-samples/syntax
