@@ -9,6 +9,14 @@ Base support for implementing GitHub Actions in PowerShell Core
 
 ---
 
+Tests:
+
+* [![XUnit Tests](https://gist.github.com/ebekker/49933657cea4f772aef0320c94850f47/raw/dotnet-tests-report_xunit.md_badge.svg)](https://gist.github.com/ebekker/49933657cea4f772aef0320c94850f47)
+* [![NUnit Tests](https://gist.github.com/ebekker/35d1803fbae717e5115bd58a5aa0f939/raw/dotnet-tests-report_nunit.md_badge.svg)](https://gist.github.com/ebekker/35d1803fbae717e5115bd58a5aa0f939)
+* [![MSTest Tests](https://gist.github.com/ebekker/8c412f16593919d785696b2bc37f2d69/raw/dotnet-tests-report_mstest.md_badge.svg)](https://gist.github.com/ebekker/8c412f16593919d785696b2bc37f2d69)
+
+---
+
 This repository contains a bundle of files to support creating GitHub Actions
 in PowerShell Core that can be executed across all the supported platforms
 where GitHub Workflows are executed.

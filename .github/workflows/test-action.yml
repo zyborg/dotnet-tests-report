@@ -60,7 +60,7 @@ jobs:
           report_title: Sample XUnit Tests
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gist_name: dotnet-tests-report_xunit.md
-          gist_badge_label: XUnit Tests
+          gist_badge_label: 'XUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
       - name: use this action, nunit project dir
@@ -73,7 +73,7 @@ jobs:
           report_title: Sample NUnit Tests
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gist_name: dotnet-tests-report_nunit.md
-          gist_badge_label: NUnit Tests
+          gist_badge_label: 'NUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
       - name: use this action, mstest project dir
@@ -86,7 +86,7 @@ jobs:
           report_title: Sample MSTest Tests
           github_token: ${{ secrets.GITHUB_TOKEN }}
           gist_name: dotnet-tests-report_mstest.md
-          gist_badge_label: MSTest Tests
+          gist_badge_label: 'MSTest Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
   ## For testing out tests on Windows
