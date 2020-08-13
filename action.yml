@@ -27,8 +27,9 @@ inputs:
 
   project_path:
     description: |
-      The project or solution file to operate on. If a file is not specified,
-      the command will search the current directory for one.
+      The project or solution file to operate on. If a file or
+      directory path is not specified, the command will assume
+      the project root path.
     required: false
 
   report_name:
