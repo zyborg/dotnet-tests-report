@@ -50,7 +50,7 @@ jobs:
           project_path: tests/samples.xunit/AssertExamples
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: use this action, xunit project dir
+      - name: use this action, nunit project dir
         if: ${{ !cancelled() }}  
         id: testAction3b
         uses: ./
