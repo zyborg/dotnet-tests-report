@@ -154,13 +154,13 @@ function Publish-ToGist {
         $gist_badge_message = $inputs.gist_badge_message
 
         if (-not $gist_badge_message) {
-            $gist_badge_message = '%Result%'
+            $gist_badge_message = '%ResultSummary_outcome%'
         }
 
-        $gist_badge_label = Resolve-EscapeTokens $gist_badge_label $pesterResult -UrlEncode
-        $gist_badge_message = Resolve-EscapeTokens $gist_badge_message $pesterResult -UrlEncode
-        $gist_badge_color = switch ($pesterResult.Result) {
-            'Passed' { 'green' }
+        $gist_badge_label = Resolve-EscapeTokens $gist_badge_label $testResult -UrlEncode
+        $gist_badge_message = Resolve-EscapeTokens $gist_badge_message $testResult -UrlEncode
+        $gist_badge_color = switch ($testResult.ResultSummary_outcome) {
+            'Completed' { 'green' }
             'Failed' { 'red' }
             default { 'yellow' }
         }
@@ -237,6 +237,19 @@ else {
         Set-ActionFailed "Failed to invoke execution of tests"
         return
     }
+
+    Write-ActionInfo "Compiling Test Result object"
+    $testResultXml = Select-Xml -Path $test_results_path -XPath /
+    $testResult = [psobject]::new()
+    $x.Node.TestRun.Attributes | % { $testResult |
+        Add-Member -MemberType NoteProperty -Name "TestRun_$($_.Name)" -Value $_.Value }
+    $x.Node.TestRun.Times.Attributes | % { $testResult |
+        Add-Member -MemberType NoteProperty -Name "Times_$($_.Name)" -Value $_.Value }
+    $x.Node.TestRun.ResultSummary.Attributes | % { $testResult |
+        Add-Member -MemberType NoteProperty -Name "ResultSummary_$($_.Name)" -Value $_.Value }
+    $x.Node.TestRun.ResultSummary.Counters.Attributes | % { $testResult |
+        Add-Member -MemberType NoteProperty -Name "Counters_$($_.Name)" -Value $_.Value }
+    Write-ActionInfo "$($testResult|Out-Default)"
 }
 
 if ($test_results_path) {
