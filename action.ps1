@@ -14,7 +14,7 @@ if (-not (Get-Module -ListAvailable GitHubActions)) {
 Import-Module GitHubActions
 
 $inputs = @{
-    trx_path           = Get-ActionInput trx_path
+    test_results_path  = Get-ActionInput test_results_path
     project_path       = Get-ActionInput project_path
     report_name        = Get-ActionInput report_name
     report_title       = Get-ActionInput report_title
@@ -27,9 +27,9 @@ $inputs = @{
 }
 
 $tmpDir = Join-Path $PWD _TMP
-$trx_path = $inputs.trx_path
+$test_results_path = $inputs.test_results_path
 
-if ($trx_path) {
+if ($test_results_path) {
     Write-ActionInfo "TRX Test Results Path provided as input; skipping test invocation"
 }
 else {
@@ -46,7 +46,7 @@ else {
     }
 
     $trxName = 'test-results.trx'
-    $trx_path = Join-Path $tmpDir $trxName
+    $test_results_path = Join-Path $tmpDir $trxName
 
     $dotnetArgs = @(
         'test'
@@ -68,4 +68,4 @@ else {
 }
 
 ## Expose the greeting as an output value of this step instance
-Set-ActionOutput -Name trx_path -Value $trx_path
+Set-ActionOutput -Name test_results_path -Value $test_results_path

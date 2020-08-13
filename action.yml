@@ -13,14 +13,17 @@ description: |
 ## You also use these to identify the *required* inputs.
 inputs:
 
-  trx_path:
+  test_results_path:
     description: |
-      Path to the test results file in TRX format which will be used
-      to generate a report.  If this path is provided, it will override
-      the invocation of `dotnet test` so the **`project_path`** input
-      and all other inputs that drive test invocation behavior will be
+      Path to the test results file which will be used to generate a report.
+      If this path is provided, it will override the invocation
+      of `dotnet test` so the **`project_path`** input and all
+      other inputs that drive test invocation behavior will be
       ignored.  Instead a report will be generated based on the
       results stored in the file pointed to by this path.
+      At this time, the only test results format supported is the
+      [Visual Studio Test Results (TRX)](https://docs.microsoft.com/en-us/visualstudio/test/vstest-console-options?view=vs-2019)
+      XML format.
 
   project_path:
     description: |
@@ -89,12 +92,15 @@ inputs:
 ## Here you describe your *formal* outputs.
 outputs:
 
-  test_path:
+  test_results_path:
     description: |
-      Path to the TRX test results file.  If the same-named input
+      Path to the test results file.  If the same-named input
       was provided to this action, this value will be the same.
       Otherwise, this will be the path to where the test results
       file was generated from running the resolved dotnet tests.
+      At this time, the only test results format supported is the
+      [Visual Studio Test Results (TRX)](https://docs.microsoft.com/en-us/visualstudio/test/vstest-console-options?view=vs-2019)
+      XML format.
 
 branding:
   color: purple
