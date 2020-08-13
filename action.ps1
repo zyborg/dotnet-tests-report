@@ -29,6 +29,15 @@ $inputs = @{
 $tmpDir = Join-Path $PWD _TMP
 $test_results_path = $inputs.test_results_path
 
+function Set-MyActionFailed {
+    param(
+        [string]$Message=''
+    )
+
+    Write-ActionError -Message $Message
+    exit 1
+}
+
 if ($test_results_path) {
     Write-ActionInfo "TRX Test Results Path provided as input; skipping test invocation"
 }
@@ -60,11 +69,18 @@ else {
         $dotnetArgs += $inputs.project_path
     }
 
-    Write-AcitonInfo "Assembled test invocation arguments:"
+    Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
 
     Write-ActionInfo "Invoking..."
     & $dotnet.Path @dotnetArgs
+
+    if (-not $?) {
+        Set-MyActionFailed "Failed to invoke execution of tests"
+        #Write-ActionError "Failed to invoke execution of tests"
+        #exit 1
+        return
+    }
 }
 
 ## Expose the greeting as an output value of this step instance
