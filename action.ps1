@@ -246,9 +246,15 @@ else {
     & $dotnet.Path @dotnetArgs
 
     if (-not $?) {
-        Set-ActionFailed "Failed to invoke execution of tests"
-        return
+        Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
     }
+    if (-not (Test-Path -PathType Leaf $test_results_path)) {
+        Write-ActionWarning "Execution of tests DID NOT PRODUCE a tests results file"
+    }
+}
+
+if ($test_results_path) {
+    Set-ActionOutput -Name test_results_path -Value $test_results_path
 
     Write-ActionInfo "Compiling Test Result object"
     $testResultXml = Select-Xml -Path $test_results_path -XPath /
@@ -262,13 +268,18 @@ else {
     $testResultXml.Node.TestRun.ResultSummary.Counters.Attributes | % { $testResult |
         Add-Member -MemberType NoteProperty -Name "Counters_$($_.Name)" -Value $_.Value }
     Write-ActionInfo "$($testResult|Out-Default)"
-}
 
-if ($test_results_path) {
-    Set-ActionOutput -Name test_results_path -Value $test_results_path
+    $result_clixml_path = Join-Path $tmpDir dotnet-test-result.clixml
+    Export-Clixml -InputObject $testResult -Path $result_clixml_path
 
+    Set-ActionOutput -Name result_clixml_path -Value $result_clixml_path
+    Set-ActionOutput -Name result_value -Value ($testResult.ResultSummary_outcome)
+    Set-ActionOutput -Name total_count -Value ($testResult.Counters_total)
+    Set-ActionOutput -Name passed_count -Value ($testResult.Counters_passed)
+    Set-ActionOutput -Name failed_count -Value ($testResult.Counters_failed)
+
+    Write-ActionInfo "Generating Markdown Report from TRX file"
     Build-MarkdownReport
-
     $reportData = [System.IO.File]::ReadAllText($test_report_path)
 
     if ($inputs.skip_check_run -ne $true) {

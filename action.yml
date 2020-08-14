@@ -118,6 +118,29 @@ outputs:
       [Visual Studio Test Results (TRX)](https://docs.microsoft.com/en-us/visualstudio/test/vstest-console-options?view=vs-2019)
       XML format.
 
+  result_clixml_path:
+    description:
+      If a test_result_path was successfully produced by a test
+      invocation or one was passed in as an input, then this will
+      be the path to an export of the results summary in CLIXML
+      form. A subsequent PowerShell step can recover
+      this object using the `Import-Clixml` cmdlet.
+
+  result_value:
+    description: |
+      A single string indicating the final result such as
+      `Failed` or `Completed`.
+  
+  total_count:
+    description: Total number of tests discovered.
+
+  passed_count:
+    description: Total number of tests passed.
+
+  failed_count:
+    description: Total number of tests failed.
+
+
 branding:
   color: purple
   icon: check-circle
