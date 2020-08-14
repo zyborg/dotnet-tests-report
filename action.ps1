@@ -18,6 +18,8 @@ Import-Module GitHubActions
 $inputs = @{
     test_results_path  = Get-ActionInput test_results_path
     project_path       = Get-ActionInput project_path
+    no_restore         = Get-ActionInput no_restore
+    msbuild_verbosity  = Get-ActionInput msbuild_verbosity
     report_name        = Get-ActionInput report_name
     report_title       = Get-ActionInput report_title
     github_token       = Get-ActionInput github_token -Required
@@ -215,13 +217,23 @@ else {
     $trxName = 'test-results.trx'
     $test_results_path = Join-Path $tmpDir $trxName
 
+    $no_restore = $inputs.no_restore
+    $msbuild_verbosity = $inputs.msbuild_verbosity
+
+    if (-not $msbuild_verbosity) {
+        $msbuild_verbosity = 'normal'
+    }
+
     $dotnetArgs = @(
         'test'
-        #'--no-restore'
-        '--verbosity','normal'
+        '--verbosity',$msbuild_verbosity
         '--results-directory',$tmpDir
         '--logger',"`"trx;LogFileName=$trxName`""
     )
+
+    if ($no_restore -eq 'true') {
+        $dotnetArgs += '--no-restore'
+    }
 
     if ($inputs.project_path) {
         $dotnetArgs += $inputs.project_path

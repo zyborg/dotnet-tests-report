@@ -32,6 +32,21 @@ inputs:
       the project root path.
     required: false
 
+  no_restore:
+    description:
+      When executing the unit tests against the `project_path`,
+      if this input parameter is `true`, do not restore the
+      project before building.
+    required: false
+
+  msbuild_verbosity:
+    description:
+      When executing the unit tests against the `project_path`,
+      this input parameter allows you to specify the verbosity
+      level of the msbuild process. Allowed values are
+      q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic].
+    required: false
+
   report_name:
     description: |
       The name of the report object that will be attached to the
