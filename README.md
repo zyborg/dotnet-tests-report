@@ -29,12 +29,25 @@ of a GitHub Workflow associated with this project.
 
 And here are some samples of the actual generated reports:
 
+Badges:
 <table border="2">
-  <tr><td><img src="docs/sample1.png" /></td></tr>
-</table><table border="2">
-  <tr><td><img src="docs/sample2.png" /></td></tr>
-</table><table border="2">
-  <tr><td><img src="docs/sample3.png" /></td></tr>
+  <tr>
+    <td><img width="450" src="docs/sample-badges1.png"/></td>
+    <td><img width="450" src="docs/sample-badges2.png"/></td>
+  </tr>
+</table>
+Workflow Reports:
+<table border="2">
+  <tr><td><img width="300" src="docs/sample-checkrun-report1.png" /></td>
+  <td><img width="300" src="docs/sample-checkrun-report2.png" /></td>
+  <td><img width="300" src="docs/sample-checkrun-report3.png" /></td></tr>
+</table>
+Gist Reports:
+<table border="2">
+  <tr>
+    <td><img width="450" src="docs/sample-gist-report1.png" /></td>
+    <td><img width="450" src="docs/sample-failure1.png" /></td>
+  </tr>
 </table>
 
 ## Usage

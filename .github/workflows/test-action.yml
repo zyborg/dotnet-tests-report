@@ -51,7 +51,7 @@ jobs:
         uses: ./
         with:
           project_path: tests
-          report_name: tests_0_all_in_solution
+          report_name: tests_0_all_in_solution-${{ matrix.os }}
           report_title: All Tests In Solution -- Last Project Wins!
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,10 +61,10 @@ jobs:
         uses: ./
         with:
           project_path: tests/samples.xunit/AssertExamples
-          report_name: tests_1_xunit
-          report_title: Sample XUnit Tests
+          report_name: tests_1_xunit-${{ matrix.os }}
+          report_title: Sample XUnit Tests (${{ matrix.os }})
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          gist_name: dotnet-tests-report_xunit.md
+          gist_name: dotnet-tests-report_xunit-${{ matrix.os }}.md
           gist_badge_label: 'XUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
@@ -74,10 +74,10 @@ jobs:
         uses: ./
         with:
           project_path: tests/nunit-csharp-samples/syntax
-          report_name: tests_2_nunit
-          report_title: Sample NUnit Tests
+          report_name: tests_2_nunit-${{ matrix.os }}
+          report_title: Sample NUnit Tests (${{ matrix.os }})
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          gist_name: dotnet-tests-report_nunit.md
+          gist_name: dotnet-tests-report_nunit-${{ matrix.os }}.md
           gist_badge_label: 'NUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
@@ -87,46 +87,32 @@ jobs:
         uses: ./
         with:
           project_path: tests/rafaelfgx_DotNetTests/MSTest
-          report_name: tests_3_mstest
-          report_title: Sample MSTest Tests
+          report_name: tests_3_mstest-${{ matrix.os }}
+          report_title: Sample MSTest Tests (${{ matrix.os }})
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          gist_name: dotnet-tests-report_mstest.md
+          gist_name: dotnet-tests-report_mstest-${{ matrix.os }}.md
           gist_badge_label: 'MSTest Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
       
       - name: dump test results
         shell: pwsh
         run: |
-          Write-ActionInfo 'xUnit:'
-          Write-ActionInfo '  * result_value = ${{ steps.testAction3a.outputs.result_value }}'
-          Write-ActionInfo '  * total_count  = ${{ steps.testAction3a.outputs.total_count }}'
-          Write-ActionInfo '  * passed_count = ${{ steps.testAction3a.outputs.passed_count }}'
-          Write-ActionInfo '  * failed_count = ${{ steps.testAction3a.outputs.failed_count }}'
+          Write-ActionInfo 'Testing on: ${{ matrix.os }}'
+          Write-ActionInfo '  xUnit:'
+          Write-ActionInfo '    * result_value = ${{ steps.testAction3a.outputs.result_value }}'
+          Write-ActionInfo '    * total_count  = ${{ steps.testAction3a.outputs.total_count }}'
+          Write-ActionInfo '    * passed_count = ${{ steps.testAction3a.outputs.passed_count }}'
+          Write-ActionInfo '    * failed_count = ${{ steps.testAction3a.outputs.failed_count }}'
           Write-ActionInfo ''
-          Write-ActionInfo 'NUnit:'
-          Write-ActionInfo '  * result_value = ${{ steps.testAction3b.outputs.result_value }}'
-          Write-ActionInfo '  * total_count  = ${{ steps.testAction3b.outputs.total_count }}'
-          Write-ActionInfo '  * passed_count = ${{ steps.testAction3b.outputs.passed_count }}'
-          Write-ActionInfo '  * failed_count = ${{ steps.testAction3b.outputs.failed_count }}'
+          Write-ActionInfo '  NUnit:'
+          Write-ActionInfo '    * result_value = ${{ steps.testAction3b.outputs.result_value }}'
+          Write-ActionInfo '    * total_count  = ${{ steps.testAction3b.outputs.total_count }}'
+          Write-ActionInfo '    * passed_count = ${{ steps.testAction3b.outputs.passed_count }}'
+          Write-ActionInfo '    * failed_count = ${{ steps.testAction3b.outputs.failed_count }}'
           Write-ActionInfo ''
-          Write-ActionInfo 'MSTest:'
-          Write-ActionInfo '  * result_value = ${{ steps.testAction3c.outputs.result_value }}'
-          Write-ActionInfo '  * total_count  = ${{ steps.testAction3c.outputs.total_count }}'
-          Write-ActionInfo '  * passed_count = ${{ steps.testAction3c.outputs.passed_count }}'
-          Write-ActionInfo '  * failed_count = ${{ steps.testAction3c.outputs.failed_count }}'
-          Write-ActionInfo ''
-
-  ## For testing out tests on Windows
-  run-tests-on-win:
-    if: ${{ false }}
-    runs-on: windows-latest
-    continue-on-error: true
-    steps:
-
-      - name: checkout
-        uses: actions/checkout@v1
-      
-      - name: use this action
-        uses: ./
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          Write-ActionInfo '  MSTest:'
+          Write-ActionInfo '    * result_value = ${{ steps.testAction3c.outputs.result_value }}'
+          Write-ActionInfo '    * total_count  = ${{ steps.testAction3c.outputs.total_count }}'
+          Write-ActionInfo '    * passed_count = ${{ steps.testAction3c.outputs.passed_count }}'
+          Write-ActionInfo '    * failed_count = ${{ steps.testAction3c.outputs.failed_count }}'
+          Write-ActionInfo '  '
