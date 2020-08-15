@@ -15,7 +15,12 @@ on:
 jobs:
 
   run-tests:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os:
+          - 'ubuntu-latest'
+          - 'windows-latest'
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: checkout
@@ -88,6 +93,28 @@ jobs:
           gist_name: dotnet-tests-report_mstest.md
           gist_badge_label: 'MSTest Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
+      
+      - name: dump test results
+        shell: pwsh
+        run: |
+          Write-ActionInfo 'xUnit:'
+          Write-ActionInfo '  * result_value = ${{ steps.testAction3a.outputs.result_value }}'
+          Write-ActionInfo '  * total_count  = ${{ steps.testAction3a.outputs.total_count }}'
+          Write-ActionInfo '  * passed_count = ${{ steps.testAction3a.outputs.passed_count }}'
+          Write-ActionInfo '  * failed_count = ${{ steps.testAction3a.outputs.failed_count }}'
+          Write-ActionInfo ''
+          Write-ActionInfo 'NUnit:'
+          Write-ActionInfo '  * result_value = ${{ steps.testAction3b.outputs.result_value }}'
+          Write-ActionInfo '  * total_count  = ${{ steps.testAction3b.outputs.total_count }}'
+          Write-ActionInfo '  * passed_count = ${{ steps.testAction3b.outputs.passed_count }}'
+          Write-ActionInfo '  * failed_count = ${{ steps.testAction3b.outputs.failed_count }}'
+          Write-ActionInfo ''
+          Write-ActionInfo 'MSTest:'
+          Write-ActionInfo '  * result_value = ${{ steps.testAction3c.outputs.result_value }}'
+          Write-ActionInfo '  * total_count  = ${{ steps.testAction3c.outputs.total_count }}'
+          Write-ActionInfo '  * passed_count = ${{ steps.testAction3c.outputs.passed_count }}'
+          Write-ActionInfo '  * failed_count = ${{ steps.testAction3c.outputs.failed_count }}'
+          Write-ActionInfo ''
 
   ## For testing out tests on Windows
   run-tests-on-win:
