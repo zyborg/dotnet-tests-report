@@ -39,6 +39,13 @@ inputs:
       project before building.
     required: false
 
+  msbuild_configuration:
+    description:
+      When executing the unit tests against the `project_path`,
+      this input parameter allows you to specify the configuration
+      passed to the msbuild process, such as `Release` or `Debug`.
+    required: false
+
   msbuild_verbosity:
     description:
       When executing the unit tests against the `project_path`,

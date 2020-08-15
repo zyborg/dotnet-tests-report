@@ -16,18 +16,19 @@ Import-Module GitHubActions
 . $PSScriptRoot/action_helpers.ps1
 
 $inputs = @{
-    test_results_path  = Get-ActionInput test_results_path
-    project_path       = Get-ActionInput project_path
-    no_restore         = Get-ActionInput no_restore
-    msbuild_verbosity  = Get-ActionInput msbuild_verbosity
-    report_name        = Get-ActionInput report_name
-    report_title       = Get-ActionInput report_title
-    github_token       = Get-ActionInput github_token -Required
-    skip_check_run     = Get-ActionInput skip_check_run
-    gist_name          = Get-ActionInput gist_name
-    gist_badge_label   = Get-ActionInput gist_badge_label
-    gist_badge_message = Get-ActionInput gist_badge_message
-    gist_token         = Get-ActionInput gist_token -Required
+    test_results_path      = Get-ActionInput test_results_path
+    project_path           = Get-ActionInput project_path
+    no_restore             = Get-ActionInput no_restore
+    msbuild_configuration  = Get-ActionInput msbuild_configuration
+    msbuild_verbosity      = Get-ActionInput msbuild_verbosity
+    report_name            = Get-ActionInput report_name
+    report_title           = Get-ActionInput report_title
+    github_token           = Get-ActionInput github_token -Required
+    skip_check_run         = Get-ActionInput skip_check_run
+    gist_name              = Get-ActionInput gist_name
+    gist_badge_label       = Get-ActionInput gist_badge_label
+    gist_badge_message     = Get-ActionInput gist_badge_message
+    gist_token             = Get-ActionInput gist_token -Required
 }
 
 $tmpDir = Join-Path $PWD _TMP
@@ -218,6 +219,7 @@ else {
     $test_results_path = Join-Path $tmpDir $trxName
 
     $no_restore = $inputs.no_restore
+    $msbuild_configuration = $inputs.msbuild_configuration
     $msbuild_verbosity = $inputs.msbuild_verbosity
 
     if (-not $msbuild_verbosity) {
@@ -231,6 +233,10 @@ else {
         '--logger',"`"trx;LogFileName=$trxName`""
     )
 
+    if ($msbuild_configuration) {
+        $dotnetArgs += '--configuration'
+        $dotnetArgs += $msbuild_configuration
+    }
     if ($no_restore -eq 'true') {
         $dotnetArgs += '--no-restore'
     }
