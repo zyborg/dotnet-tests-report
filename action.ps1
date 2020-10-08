@@ -84,6 +84,13 @@ function Publish-ToCheckRun {
     Write-ActionInfo "Resolve Repo Full Name as $repoFullName"
 
     Write-ActionInfo "Adding Check Run"
+    $conclusion = 'neutral'
+    if ($testResult.ResultSummary_outcome -eq "Failed") {
+        Write-ActionWarning "Found failing tests"
+        $conclusion = 'failure'
+
+    }
+
     $url = "https://api.github.com/repos/$repoFullName/check-runs"
     $hdr = @{
         Accept = 'application/vnd.github.antiope-preview+json'
@@ -92,7 +99,7 @@ function Publish-ToCheckRun {
     $bdy = @{
         name       = $report_name
         head_sha   = $ref
-        status     = 'completed'
+        status     = $conclusion
         conclusion = 'neutral'
         output     = @{
             title   = $report_title
