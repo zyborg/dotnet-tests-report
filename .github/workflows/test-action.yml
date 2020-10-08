@@ -8,6 +8,8 @@ on:
         required: false
       gist_name:
         required: false
+      fail_check_on_failed_tests:
+        required: false
   #push:
   #release:
   #  types: published
