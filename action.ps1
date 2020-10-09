@@ -87,18 +87,18 @@ function Publish-ToCheckRun {
     Write-ActionInfo "Adding Check Run"
     $conclusion = 'neutral'
     
-    if ($testResult.ResultSummary_outcome -eq "Failed") {
+    if ($inputs.fail_check_on_failed_tests) {
 
         if ($testResult.ResultSummary_outcome -eq "Failed") {
 
                 Write-ActionWarning "Found failing tests"
                 $conclusion = 'failure'
-            }
-            elseif ($testResult.ResultSummary_outcome -eq "Completed") {
+        }
+        elseif ($testResult.ResultSummary_outcome -eq "Completed") {
 
                 Write-ActionInfo "All tests passed"
                 $conclusion = 'success'
-            }
+        }
     }
 
     $url = "https://api.github.com/repos/$repoFullName/check-runs"
