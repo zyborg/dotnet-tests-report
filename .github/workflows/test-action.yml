@@ -8,7 +8,7 @@ on:
         required: false
       gist_name:
         required: false
-      fail_check_on_failed_tests:
+      set_check_status_from_test_outcome:
         required: false
   #push:
   #release:

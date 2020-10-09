@@ -111,10 +111,11 @@ inputs:
       You can control which account is used to actually store the state by
       generating a token associated with the target account.
 
-  fail_check_on_failed_tests:
+  set_check_status_from_test_outcome:
     description: |
       If set to true, GitHub check status will be set to 'failure' 
-      if at least one test fails
+      if at least one test fails. If all tests pass then check status will 
+      be set to 'success'
 
 
 

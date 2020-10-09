@@ -16,20 +16,20 @@ Import-Module GitHubActions
 . $PSScriptRoot/action_helpers.ps1
 
 $inputs = @{
-    test_results_path           = Get-ActionInput test_results_path
-    project_path                = Get-ActionInput project_path
-    no_restore                  = Get-ActionInput no_restore
-    msbuild_configuration       = Get-ActionInput msbuild_configuration
-    msbuild_verbosity           = Get-ActionInput msbuild_verbosity
-    report_name                 = Get-ActionInput report_name
-    report_title                = Get-ActionInput report_title
-    github_token                = Get-ActionInput github_token -Required
-    skip_check_run              = Get-ActionInput skip_check_run
-    gist_name                   = Get-ActionInput gist_name
-    gist_badge_label            = Get-ActionInput gist_badge_label
-    gist_badge_message          = Get-ActionInput gist_badge_message
-    gist_token                  = Get-ActionInput gist_token -Required
-    fail_check_on_failed_tests  = Get-ActionInput fail_check_on_failed_tests
+    test_results_path                   = Get-ActionInput test_results_path
+    project_path                        = Get-ActionInput project_path
+    no_restore                          = Get-ActionInput no_restore
+    msbuild_configuration               = Get-ActionInput msbuild_configuration
+    msbuild_verbosity                   = Get-ActionInput msbuild_verbosity
+    report_name                         = Get-ActionInput report_name
+    report_title                        = Get-ActionInput report_title
+    github_token                        = Get-ActionInput github_token -Required
+    skip_check_run                      = Get-ActionInput skip_check_run
+    gist_name                           = Get-ActionInput gist_name
+    gist_badge_label                    = Get-ActionInput gist_badge_label
+    gist_badge_message                  = Get-ActionInput gist_badge_message
+    gist_token                          = Get-ActionInput gist_token -Required
+    set_check_status_from_test_outcome  = Get-ActionInput set_check_status_from_test_outcome
 }
 
 $tmpDir = Join-Path $PWD _TMP
@@ -87,17 +87,20 @@ function Publish-ToCheckRun {
     Write-ActionInfo "Adding Check Run"
     $conclusion = 'neutral'
     
-    if ($inputs.fail_check_on_failed_tests) {
+    # Set check status based on test result outcome.
+    # Map additional statuses from here:
+    # https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#create-a-check-run--parameters
+    if ($inputs.set_check_status_from_test_outcome) {
 
         if ($testResult.ResultSummary_outcome -eq "Failed") {
 
-                Write-ActionWarning "Found failing tests"
-                $conclusion = 'failure'
+            Write-ActionWarning "Found failing tests"
+            $conclusion = 'failure'
         }
         elseif ($testResult.ResultSummary_outcome -eq "Completed") {
 
-                Write-ActionInfo "All tests passed"
-                $conclusion = 'success'
+            Write-ActionInfo "All tests passed"
+            $conclusion = 'success'
         }
     }
 
