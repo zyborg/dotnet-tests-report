@@ -107,6 +107,10 @@ jobs:
 
 ---
 
+### Set check status based on test outcome
+By default the [check status](https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#create-a-check-run--parameters) is set to 'neutral'. Set the flag `set_check_status_from_test_outcome: true`.
+Note that setting this flag to `true` will fail the check on pull requests if at least one test fails in your project.
+
 ### PowerShell GitHub Action
 
 This Action is implemented as a [PowerShell GitHub Action](https://github.com/ebekker/pwsh-github-action-base).

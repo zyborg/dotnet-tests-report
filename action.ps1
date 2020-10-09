@@ -87,10 +87,10 @@ function Publish-ToCheckRun {
     Write-ActionInfo "Adding Check Run"
     $conclusion = 'neutral'
     
-    # Set check status based on test result outcome.
-    # Map additional statuses from here:
-    # https://docs.github.com/en/free-pro-team@latest/rest/reference/checks#create-a-check-run--parameters
+    # Set check status based on test result outcome.    
     if ($inputs.set_check_status_from_test_outcome) {
+
+        Write-ActionInfo "Mapping check status to test outcome..."
 
         if ($testResult.ResultSummary_outcome -eq "Failed") {
 
