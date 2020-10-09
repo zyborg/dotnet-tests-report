@@ -100,8 +100,8 @@ function Publish-ToCheckRun {
     $bdy = @{
         name       = $report_name
         head_sha   = $ref
-        status     = $conclusion
-        conclusion = 'neutral'
+        status     = 'completed'
+        conclusion = $conclusion
         output     = @{
             title   = $report_title
             summary = "This run completed at ``$([datetime]::Now)``"
