@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: use this action, test solution dir
-        uses: zyborg/dotnet-tests-report@v1.0.0
+        uses: zyborg/dotnet-tests-report@v1.2.0
         with:
           project_path: tests/My.Project.Tests
           report_name: my_project_tests
@@ -83,7 +83,7 @@ jobs:
     steps:
 
       - name: unit tests for Contoso Business Layer
-        uses: zyborg/dotnet-tests-report@v1.0.0
+        uses: zyborg/dotnet-tests-report@v1.2.0
         with:
           project_path: tests/Contoso.Business.Tests
           report_name: contoso_business_tests
@@ -94,7 +94,7 @@ jobs:
           gist_token: ${{ secrets.GIST_TOKEN }}
 
       - name: unit tests for Contoso Service Layer
-        uses: zyborg/dotnet-tests-report@v1.0.0
+        uses: zyborg/dotnet-tests-report@v1.2.0
         with:
           project_path: tests/Contoso.Service.Tests
           report_name: contoso_service_tests
