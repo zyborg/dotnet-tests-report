@@ -36,6 +36,8 @@ $tmpDir = Join-Path $PWD _TMP
 $test_results_path = $inputs.test_results_path
 $test_report_path = Join-Path $tmpDir test-results.md
 
+New-Item -Name $tmpDir -ItemType "directory" -Force
+
 function Build-MarkdownReport {
     $script:report_name = $inputs.report_name
     $script:report_title = $inputs.report_title
