@@ -33,7 +33,6 @@ if (-not $xslFile) {
 elseif ($xslFile -notmatch '^[/\\]') {
     $xslFile = [System.IO.Path]::Combine($PWD, $xslFile)
     Write-Verbose "Resolving XSL file relative to current directory: $xslFile"
-
 }
 
 class TrxFn {

@@ -30,6 +30,7 @@ $inputs = @{
     gist_badge_message                  = Get-ActionInput gist_badge_message
     gist_token                          = Get-ActionInput gist_token -Required
     set_check_status_from_test_outcome  = Get-ActionInput set_check_status_from_test_outcome
+    trx_xsl_path                        = Get-ActionInput trx_xsl_path
 }
 
 $tmpDir = Join-Path $PWD _TMP
@@ -41,6 +42,7 @@ New-Item -Name $tmpDir -ItemType "directory" -Force
 function Build-MarkdownReport {
     $script:report_name = $inputs.report_name
     $script:report_title = $inputs.report_title
+    $script:trx_xsl_path = $inputs.trx_xsl_path
 
     if (-not $script:report_name) {
         $script:report_name = "TEST_RESULTS_$([datetime]::Now.ToString('yyyyMMdd_hhmmss'))"
@@ -50,11 +52,28 @@ function Build-MarkdownReport {
     }
 
     $script:test_report_path = Join-Path $tmpDir test-results.md
-    & "$PSScriptRoot/trx-report/trx2md.ps1" -Verbose `
-        -trxFile $script:test_results_path `
-        -mdFile $script:test_report_path -xslParams @{
+    $trx2mdParams = @{
+        trxFile   = $script:test_results_path
+        mdFile    = $script:test_report_path
+        xslParams = @{
             reportTitle = $script:report_title
         }
+    }
+    if ($script:trx_xsl_path) {
+        $script:trx_xsl_path = "$(Resolve-Path $script:trx_xsl_path)"
+        Write-ActionInfo "Override TRX XSL Path Provided"
+        Write-ActionInfo "  resolved as: $($script:trx_xsl_path)"
+
+        if (Test-Path $script:trx_xsl_path) {
+            ## If XSL path is provided and exists, override the default
+            $trx2mdParams.xslFile = $script:trx_xsl_path
+        }
+        else {
+            Write-ActionWarning "Could not find TRX XSL at resolved path; IGNORING"
+        }
+    }
+    & "$PSScriptRoot/trx-report/trx2md.ps1" @trx2mdParams -Verbose
+        
 }
 
 function Publish-ToCheckRun {

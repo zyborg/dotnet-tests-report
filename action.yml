@@ -79,7 +79,7 @@ inputs:
 
   gist_name:
     description: |
-      If this value is specifed, the Test Results Report will be
+      If this value is specified, the Test Results Report will be
       attached as a version of a Gist under the name of this input.
       The `gist_token` input is also required to use this feature.
   
@@ -115,7 +115,12 @@ inputs:
     description: |
       If set to true, GitHub check status will be set to 'failure' 
       if at least one test fails. If all tests pass then check status will 
-      be set to 'success'
+      be set to 'success'.
+
+  trx_xsl_path:
+    description: |
+      If specified, will override the default XSL transformation stylesheet
+      used to convert TRX input file to a Markdown report.
 
 
 

@@ -70,6 +70,20 @@ jobs:
           gist_badge_label: 'XUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
+      - name: use this action, xunit project dir, ALTERNATE XSL
+        if: ${{ !cancelled() }}
+        id: testAction3a2
+        uses: ./
+        with:
+          project_path: tests/samples.xunit/AssertExamples
+          report_name: tests_1_xunit_altxsl-${{ matrix.os }}
+          report_title: Sample XUnit Tests (Alt XSL) (${{ matrix.os }})
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gist_name: dotnet-tests-report_xunit_altxsl-${{ matrix.os }}.md
+          gist_badge_label: 'XUnit Tests (Alt XSL): %Counters_passed%/%Counters_total%'
+          gist_token: ${{ secrets.GIST_TOKEN }}
+          trx_xsl_path: trx-report/trx2md-alt-sample.xsl
+
       - name: use this action, nunit project dir
         if: ${{ !cancelled() }}  
         id: testAction3b
@@ -105,6 +119,12 @@ jobs:
           Write-ActionInfo '    * total_count  = ${{ steps.testAction3a.outputs.total_count }}'
           Write-ActionInfo '    * passed_count = ${{ steps.testAction3a.outputs.passed_count }}'
           Write-ActionInfo '    * failed_count = ${{ steps.testAction3a.outputs.failed_count }}'
+          Write-ActionInfo ''
+          Write-ActionInfo '  xUnit (XSL Alt):'
+          Write-ActionInfo '    * result_value = ${{ steps.testAction3a2.outputs.result_value }}'
+          Write-ActionInfo '    * total_count  = ${{ steps.testAction3a2.outputs.total_count }}'
+          Write-ActionInfo '    * passed_count = ${{ steps.testAction3a2.outputs.passed_count }}'
+          Write-ActionInfo '    * failed_count = ${{ steps.testAction3a2.outputs.failed_count }}'
           Write-ActionInfo ''
           Write-ActionInfo '  NUnit:'
           Write-ActionInfo '    * result_value = ${{ steps.testAction3b.outputs.result_value }}'
