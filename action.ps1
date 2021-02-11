@@ -284,14 +284,16 @@ else {
         $dotnetArgs += '--no-restore'
     }
 
-    if ($inputs.project_path) {
-        $dotnetArgs += $inputs.project_path
-    }
-    
     if ($inputs.extra_test_parameters) {
         $dotnetArgs += ' '
         $dotnetArgs += $inputs.extra_test_parameters
     }
+
+    # The project path has to be after all switches so this needs to be last
+    if ($inputs.project_path) {
+        $dotnetArgs += $inputs.project_path
+    }
+    
 
     Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
