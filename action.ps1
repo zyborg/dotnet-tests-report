@@ -280,13 +280,14 @@ else {
         $dotnetArgs += '--configuration'
         $dotnetArgs += $msbuild_configuration
     }
+    
     if ($no_restore -eq 'true') {
         $dotnetArgs += '--no-restore'
     }
 
     if ($inputs.extra_test_parameters) {
-        $dotnetArgs += ' '
-        $dotnetArgs += $inputs.extra_test_parameters
+        # we need to add the extra parameters to the array @dotnetArgs
+        $dotnetArgs += $inputs.extra_test_parameters -split ' '
     }
 
     # The project path has to be after all switches so this needs to be last
@@ -294,7 +295,6 @@ else {
         $dotnetArgs += $inputs.project_path
     }
     
-
     Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
 
