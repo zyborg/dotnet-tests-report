@@ -288,9 +288,9 @@ else {
         $dotnetArgs += $inputs.project_path
     }
     
-    if ($extra_test_parameters) {
+    if ($inputs.extra_test_parameters) {
         $dotnetArgs += ' '
-        $dotnetArgs += $extra_test_parameters
+        $dotnetArgs += $inputs.extra_test_parameters
     }
 
     Write-ActionInfo "Assembled test invocation arguments:"
@@ -300,7 +300,7 @@ else {
     & $dotnet.Path @dotnetArgs
 
     if (-not $?) {
-        if ($fail_build_on_failed_tests -eq 'true') {
+        if ($inputs.fail_build_on_failed_tests -eq 'true') {
             Write-ActionError "Tests failed so failing build..."
             exit 1
         } else {
