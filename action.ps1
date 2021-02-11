@@ -31,6 +31,8 @@ $inputs = @{
     gist_token                          = Get-ActionInput gist_token -Required
     set_check_status_from_test_outcome  = Get-ActionInput set_check_status_from_test_outcome
     trx_xsl_path                        = Get-ActionInput trx_xsl_path
+    extra_test_parameters               = Get-ActionInput extra_test_parameters
+    fail_build_on_failed_tests          = Get-ActionInput fail_build_on_failed_tests
 }
 
 $tmpDir = Join-Path $PWD _TMP
@@ -285,6 +287,11 @@ else {
     if ($inputs.project_path) {
         $dotnetArgs += $inputs.project_path
     }
+    
+    if ($extra_test_parameters) {
+        $dotnetArgs += ' '
+        $dotnetArgs += $extra_test_parameters
+    }
 
     Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
@@ -293,7 +300,12 @@ else {
     & $dotnet.Path @dotnetArgs
 
     if (-not $?) {
-        Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
+        if ($fail_build_on_failed_tests -eq 'true') {
+            Write-ActionError "Tests failed so failing build..."
+            exit 1
+        } else {
+            Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
+        }
     }
     if (-not (Test-Path -PathType Leaf $test_results_path)) {
         Write-ActionWarning "Execution of tests DID NOT PRODUCE a tests results file"
