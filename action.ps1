@@ -242,6 +242,8 @@ function Publish-ToGist {
     }
 }
 
+[bool]$testsfailed = $false
+
 if ($test_results_path) {
     Write-ActionInfo "TRX Test Results Path provided as input; skipping test invocation"
 }
@@ -302,12 +304,8 @@ else {
     & $dotnet.Path @dotnetArgs
 
     if (-not $?) {
-        if ($inputs.fail_build_on_failed_tests -eq 'true') {
-            Write-ActionError "Tests failed so failing build..."
-            exit 1
-        } else {
-            Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
-        }
+        $testsfailed = $true
+        Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
     }
     if (-not (Test-Path -PathType Leaf $test_results_path)) {
         Write-ActionWarning "Execution of tests DID NOT PRODUCE a tests results file"
@@ -349,4 +347,9 @@ if ($test_results_path) {
     if ($inputs.gist_name -and $inputs.gist_token) {
         Publish-ToGist -ReportData $reportData
     }
+}
+
+if ($testsfailed -and $inputs.fail_build_on_failed_tests) {
+    Write-ActionError "Tests failed so failing build..."
+    exit 1
 }
