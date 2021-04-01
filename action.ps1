@@ -31,6 +31,8 @@ $inputs = @{
     gist_token                          = Get-ActionInput gist_token -Required
     set_check_status_from_test_outcome  = Get-ActionInput set_check_status_from_test_outcome
     trx_xsl_path                        = Get-ActionInput trx_xsl_path
+    extra_test_parameters               = Get-ActionInput extra_test_parameters
+    fail_build_on_failed_tests          = Get-ActionInput fail_build_on_failed_tests
 }
 
 $tmpDir = Join-Path $PWD _TMP
@@ -240,6 +242,8 @@ function Publish-ToGist {
     }
 }
 
+[bool]$testsfailed = $false
+
 if ($test_results_path) {
     Write-ActionInfo "TRX Test Results Path provided as input; skipping test invocation"
 }
@@ -278,14 +282,21 @@ else {
         $dotnetArgs += '--configuration'
         $dotnetArgs += $msbuild_configuration
     }
+    
     if ($no_restore -eq 'true') {
         $dotnetArgs += '--no-restore'
     }
 
+    if ($inputs.extra_test_parameters) {
+        # we need to add the extra parameters to the array @dotnetArgs
+        $dotnetArgs += $inputs.extra_test_parameters -split ' '
+    }
+
+    # The project path has to be after all switches so this needs to be last
     if ($inputs.project_path) {
         $dotnetArgs += $inputs.project_path
     }
-
+    
     Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
 
@@ -293,6 +304,7 @@ else {
     & $dotnet.Path @dotnetArgs
 
     if (-not $?) {
+        $testsfailed = $true
         Write-ActionWarning "Execution of tests returned failure: $LASTEXITCODE"
     }
     if (-not (Test-Path -PathType Leaf $test_results_path)) {
@@ -335,4 +347,9 @@ if ($test_results_path) {
     if ($inputs.gist_name -and $inputs.gist_token) {
         Publish-ToGist -ReportData $reportData
     }
+}
+
+if ($testsfailed -and $inputs.fail_build_on_failed_tests) {
+    Write-ActionError "Tests failed so failing build..."
+    exit 1
 }

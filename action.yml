@@ -122,6 +122,14 @@ inputs:
       If specified, will override the default XSL transformation stylesheet
       used to convert TRX input file to a Markdown report.
 
+  extra_test_parameters:
+    description: |
+      Useful for passing extra parameters to dotnet test. Eg,
+      '--filter category=unit'
+      
+  fail_build_on_failed_tests:
+    description: |
+      If set to true, the build will fail if at least one test fails      
 
 
 ## Here you describe your *formal* outputs.
