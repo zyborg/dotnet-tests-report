@@ -231,6 +231,11 @@ function Publish-ToGist {
         $createGist = $createGistResp.Content | ConvertFrom-Json -AsHashtable
         $reportGist = $createGist
         Write-ActionInfo "Create Response: $createGistResp"
+
+        Set-ActionOutput -Name gist_report_url -Value $createGist.html_url
+        if ($gist_badge_label) {
+            Set-ActionOutput -Name gist_badge_url -Value $createGist.files."$($reportGistName)_badge.svg".raw_url
+        }
     }
     else {
         Write-ActionInfo "Updating Tests Report Gist"
@@ -238,8 +243,13 @@ function Publish-ToGist {
         $updateGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $updateGistUrl -Method Patch -Body (@{
             files = $gistFiles
         } | ConvertTo-Json)
-
+        $updateGist = $updateGistResp.Content | ConvertFrom-Json -AsHashtable
         Write-ActionInfo "Update Response: $updateGistResp"
+
+        Set-ActionOutput -Name gist_report_url -Value $updateGist.html_url
+        if ($gist_badge_label) {
+            Set-ActionOutput -Name gist_badge_url -Value $updateGist.files."$($reportGistName)_badge.svg".raw_url
+        }
     }
 }
 

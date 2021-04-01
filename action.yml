@@ -165,7 +165,17 @@ outputs:
     description: |
       A single string indicating the final result such as
       `Failed` or `Completed`.
-  
+
+  gist_report_url:
+    description: |
+      If Gist-based Test Results were requested,
+      this will contain the URL to the Gist.
+
+  gist_badge_url:
+    description: |
+      If Gist-based Test Results were requested as well as a status badge,
+      this will contain the URL to the status badge.
+
   total_count:
     description: Total number of tests discovered.
 
