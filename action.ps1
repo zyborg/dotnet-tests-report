@@ -28,6 +28,7 @@ $inputs = @{
     gist_name                           = Get-ActionInput gist_name
     gist_badge_label                    = Get-ActionInput gist_badge_label
     gist_badge_message                  = Get-ActionInput gist_badge_message
+    gist_is_secret                      = Get-ActionInput gist_is_secret
     gist_token                          = Get-ActionInput gist_token -Required
     set_check_status_from_test_outcome  = Get-ActionInput set_check_status_from_test_outcome
     trx_xsl_path                        = Get-ActionInput trx_xsl_path
@@ -224,7 +225,7 @@ function Publish-ToGist {
     if (-not $reportGist) {
         Write-ActionInfo "Creating initial Tests Report Gist"
         $createGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $gistsApiUrl -Method Post -Body (@{
-            public = $true ## Set thit to false to make it a Secret Gist
+            public = ($inputs.gist_is_secret -ne $true)  ## Public or Secret Gist?
             files = $gistFiles
         } | ConvertTo-Json)
         $createGist = $createGistResp.Content | ConvertFrom-Json -AsHashtable

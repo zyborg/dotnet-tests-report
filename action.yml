@@ -102,6 +102,14 @@ inputs:
       label input, you can specify escape tokens in addition to literal
       text.  See the label input description for more details.
 
+  gist_is_secret:
+    description: |
+      If true, will create the Tests Results Gist will be created as a
+      _secret_ Gist, otherwise it will be created as a public Gist.
+      Secret Gists can be changed to public, but public Gists cannot be
+      change to secret.  More details can be found
+      [here](https://docs.github.com/en/github/writing-on-github/creating-gists#about-gists).
+
   gist_token:
     description: |
       GitHub OAuth/PAT token to be used for accessing Gist to store
