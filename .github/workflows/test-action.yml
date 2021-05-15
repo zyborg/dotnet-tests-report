@@ -70,6 +70,18 @@ jobs:
           gist_badge_label: 'XUnit Tests: %Counters_passed%/%Counters_total%'
           gist_token: ${{ secrets.GIST_TOKEN }}
 
+      - name: use this action, xunit project dir no restore no build
+        if: ${{ !cancelled() }}
+        id: testAction3a1
+        uses: ./
+        with:
+          project_path: tests/samples.xunit/AssertExamples
+          report_name: tests_1_xunit-norestore-nobuild-${{ matrix.os }}
+          report_title: Sample XUnit Tests without build or restore (${{ matrix.os }})
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          no_restore: true
+          no_build: true
+
       - name: use this action, xunit project dir, ALTERNATE XSL
         if: ${{ !cancelled() }}
         id: testAction3a2

@@ -39,6 +39,13 @@ inputs:
       project before building.
     required: false
 
+  no_build:
+    description:
+      When executing the unit tests against the `project_path`,
+      if this input parameter is `true`, do not build the
+      project before executing tests.
+    required: false
+
   msbuild_configuration:
     description:
       When executing the unit tests against the `project_path`,
