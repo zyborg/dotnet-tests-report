@@ -2,6 +2,8 @@
 
 GitHub Action to run .NET tests and generate reports and badges.
 
+:star: I appreciate your star, it helps me decide to which OSS projects I should allocate my spare time.
+
 ---
 
 [![GitHub Workflow - CI](https://github.com/zyborg/dotnet-tests-report/workflows/test-action/badge.svg)](https://github.com/zyborg/dotnet-tests-report/actions?workflow=test-action)
