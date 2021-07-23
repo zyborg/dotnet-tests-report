@@ -42,7 +42,8 @@ Write-ActionInfo "Resolved tmpDir as [$tmpDir]"
 $test_results_path = $inputs.test_results_path
 $test_report_path = Join-Path $tmpDir test-results.md
 
-New-Item -Name $tmpDir -ItemType Directory -Force -ErrorAction Ignore
+# Can't use full path on Linux, New-Item is always relative to current directory
+New-Item -Name '_TMP' -ItemType Directory -Force -ErrorAction Ignore
 
 function Build-MarkdownReport {
     $script:report_name = $inputs.report_name
