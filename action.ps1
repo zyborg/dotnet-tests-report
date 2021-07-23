@@ -35,6 +35,7 @@ $inputs = @{
     trx_xsl_path                        = Get-ActionInput trx_xsl_path
     extra_test_parameters               = Get-ActionInput extra_test_parameters
     fail_build_on_failed_tests          = Get-ActionInput fail_build_on_failed_tests
+    sha                                 = Get-ActionInput sha
 }
 
 $tmpDir = [System.IO.Path]::Combine($PWD, '_TMP')
@@ -95,7 +96,11 @@ function Publish-ToCheckRun {
 
     Write-ActionInfo "Resolving REF"
     $ref = $ctx.Sha
-    if ($ctx.EventName -eq 'pull_request') {
+
+    if ($inputs.sha) {
+        Write-ActionInfo "Resolving as input sha"
+        $ref = $inputs.sha
+    } elseif ($ctx.EventName -eq 'pull_request') {
         Write-ActionInfo "Resolving PR REF"
         $ref = $ctx.Payload.pull_request.head.sha
         if (-not $ref) {
@@ -103,6 +108,7 @@ function Publish-ToCheckRun {
             $ref = $ctx.Payload.after
         }
     }
+
     if (-not $ref) {
         Write-ActionError "Failed to resolve REF"
         exit 1

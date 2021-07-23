@@ -144,7 +144,11 @@ inputs:
       
   fail_build_on_failed_tests:
     description: |
-      If set to true, the build will fail if at least one test fails      
+      If set to true, the build will fail if at least one test fails
+
+  sha:
+    description: The commit that the report check will be associated with. This is auto-detected by default.
+    required: false
 
 
 ## Here you describe your *formal* outputs.
