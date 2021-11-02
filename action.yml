@@ -146,6 +146,12 @@ inputs:
     description: |
       If set to true, the build will fail if at least one test fails      
 
+  inline_run_settings:
+    description: |
+      A space-delimited list of key=value pairs corresponding to runsettings for the tests.
+      See https://github.com/Microsoft/vstest-docs/blob/main/docs/RunSettingsArguments.md for more details.
+    required: false
+
 
 ## Here you describe your *formal* outputs.
 outputs:

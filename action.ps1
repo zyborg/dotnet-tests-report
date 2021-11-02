@@ -35,6 +35,7 @@ $inputs = @{
     trx_xsl_path                        = Get-ActionInput trx_xsl_path
     extra_test_parameters               = Get-ActionInput extra_test_parameters
     fail_build_on_failed_tests          = Get-ActionInput fail_build_on_failed_tests
+    inline_run_settings                 = Get-ActionInput inline_run_settings
 }
 
 $tmpDir = [System.IO.Path]::Combine($PWD, '_TMP')
@@ -315,6 +316,12 @@ else {
         $dotnetArgs += $inputs.project_path
     }
     
+    # any inline runsettings must be provided after a -- token to separate from other settings
+    if ($inputs.inline_run_settings) {
+        $dotnetArgs += '--'
+        $dotnetArgs += $inputs.inline_run_settings
+    }
+
     Write-ActionInfo "Assembled test invocation arguments:"
     Write-ActionInfo "    $dotnetArgs"
 
